@@ -1,0 +1,47 @@
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import IsolationForest
+from sklearn.metrics import classification_report, confusion_matrix
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load dataset
+df = pd.read_csv('/content/synthetic_creditcard_transactions.csv')
+
+# Display first few rows
+df.head()
+
+# Shape of the dataset
+print("Shape:", df.shape)
+# Column names
+print("Columns:", df.columns.tolist())
+# Data types and non-null values
+df.info()
+# Summary statistics for numeric features
+df.describe()
+
+# Check for missing values
+print(df.isnull().sum())
+# Check for duplicates
+print("Duplicate rows:", df.duplicated().sum())
+
+target = 'Class'
+features = df.columns.drop(target)
+print("Features:", features)
+
+# Identify categorical columns
+categorical_cols = df.select_dtypes(include=['object']).columns
+print("Categorical Columns:", categorical_cols.tolist())
+
+from sklearn.preprocessing import StandardScaler
+
+# Create a StandardScaler object
+scaler = StandardScaler()
+
+# Scale the features (excluding the target variable 'Class')
+x_scaled = scaler.fit_transform(df.drop('Class', axis=1))
+
+# Assuming 'categorical_cols' contains the names of your categorical columns
+df_encoded = pd.get_dummies(df, columns=categorical_cols, drop_first=True)
+
